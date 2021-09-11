@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graph viz</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
+
+    <link rel="stylesheet" href="app.css" />
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <form class="dot-form">
+        <textarea
+          id="graph-dot-textarea"
+          name="graph-dot-textarea"
+          rows="4"
+          cols="50"
+        ></textarea>
+        <button id="draw-button" type="button" class="base-btn primary-button">
+          Draw
+        </button>
+      </form>
+      <div id="graph-container"></div>
+    </div>
+  </body>
+</html>
