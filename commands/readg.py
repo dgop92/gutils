@@ -1,14 +1,12 @@
-import typer
 import tkinter as tk
-import re
 
-WEIGHTED_VERTEX_REGEX = r"[a-z]"
-UNWEIGHTED_VERTEX_REGEX = r"[a-z]\d+"
+import typer
 
 
 class GraphParser:
-    def __init__(self, str_representation):
+    def __init__(self, str_representation, directed=False):
         self.str_representation = str_representation
+        self.directed = directed
         self.str_edge_list = []
         self.isolated_vertices = []
 
@@ -32,7 +30,16 @@ class GraphParser:
                 except ValueError:
                     vertice, weight = child, 1
 
-                self.str_edge_list.append(f"({parent}, {vertice}, {weight})")
+                edge = (
+                    parent,
+                    vertice,
+                    weight,
+                )
+                self.str_edge_list.append(edge)
+
+    def get_gstring(self):
+        g_string = f"{self.str_edge_list}-{self.isolated_vertices}-{self.directed}"
+        return g_string
 
 
 class NotePad(tk.Tk):
@@ -48,12 +55,8 @@ class NotePad(tk.Tk):
         windowWidth = self.winfo_reqwidth()
         windowHeight = self.winfo_reqheight()
 
-        positionRight = int(
-            self.textbox.winfo_screenwidth() / 2 - windowWidth / 2
-        )
-        positionDown = int(
-            self.textbox.winfo_screenheight() / 2 - windowHeight / 2
-        )
+        positionRight = int(self.textbox.winfo_screenwidth() / 2 - windowWidth / 2)
+        positionDown = int(self.textbox.winfo_screenheight() / 2 - windowHeight / 2)
 
         # Positions the window in the center of the page.
         self.geometry("+{}+{}".format(positionRight, positionDown))
@@ -64,21 +67,18 @@ class NotePad(tk.Tk):
         self.destroy()
 
 
-class NotePadParser(GraphParser):
-    def __init__(self):
-        notepad = NotePad()
-        super().__init__(notepad.text_written)
-
-
 app = typer.Typer(name="readg")
 
 
 @app.callback(invoke_without_command=True)
-def readg():
+def readg(
+    directed: bool = typer.Option(False, help="whether or not the graph is directed"),
+):
     notepad = NotePad()
-    gparser = GraphParser(notepad.text_written)
+    gparser = GraphParser(notepad.text_written, directed=directed)
     gparser.parse()
-    typer.echo(f"-> {gparser.str_edge_list}")
+    typer.echo(gparser.get_gstring())
+
 
 if __name__ == "__main__":
     app()

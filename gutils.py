@@ -1,4 +1,5 @@
 import typer
+
 from commands import all_commands
 
 app = typer.Typer()
