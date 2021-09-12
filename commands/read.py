@@ -2,6 +2,8 @@ import tkinter as tk
 
 import typer
 
+from gutils_exceptions import GUtilsException, catch_exception
+
 
 class GraphParser:
     def __init__(self, str_representation, directed=False):
@@ -26,9 +28,14 @@ class GraphParser:
 
             for child in children:
                 try:
-                    vertice, weight = child.split(".")
+                    vertice, weight = child.split("|")
                 except ValueError:
                     vertice, weight = child, 1
+
+                try:
+                    weight = float(weight)
+                except ValueError:
+                    raise GUtilsException("Weight must be a number")
 
                 edge = (
                     parent,
@@ -71,10 +78,13 @@ app = typer.Typer(name="read")
 
 
 @app.callback(invoke_without_command=True)
+@catch_exception(GUtilsException)
 def read(
     directed: bool = typer.Option(False, help="whether or not the graph is directed"),
 ):
     notepad = NotePad()
+    if len(notepad.text_written) == 0:
+        raise GUtilsException("Adjacency representation is empty")
     gparser = GraphParser(notepad.text_written, directed=directed)
     gparser.parse()
     typer.echo(gparser.get_gstring())

@@ -41,6 +41,5 @@ def parse_gstring(gstring):
         g.add_nodes_from(isolated_vertices)
 
         return g
-    except Exception as e:
-        print(e)
+    except Exception:
         raise GUtilsException("Invalid gstring representation")
