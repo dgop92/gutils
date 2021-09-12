@@ -1,7 +1,5 @@
+from commands.draw import app as draw
 from commands.mst import app as mst
-from commands.readg import app as readg
+from commands.read import app as read
 
-all_commands = [
-    readg,
-    mst,
-]
+all_commands = [read, mst, draw]

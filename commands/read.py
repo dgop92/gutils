@@ -67,11 +67,11 @@ class NotePad(tk.Tk):
         self.destroy()
 
 
-app = typer.Typer(name="readg")
+app = typer.Typer(name="read")
 
 
 @app.callback(invoke_without_command=True)
-def readg(
+def read(
     directed: bool = typer.Option(False, help="whether or not the graph is directed"),
 ):
     notepad = NotePad()
