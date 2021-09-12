@@ -1,12 +1,13 @@
 import typer
 
+from commands.draw import draw
 from commands.utils import parse_gstring
 from gutils_exceptions import GUtilsException, catch_exception
 
 app = typer.Typer(name="info")
 
 
-@app.callback(invoke_without_command=True)
+@app.command()
 @catch_exception(GUtilsException)
 def info(
     gstring: str = typer.Argument(
@@ -36,6 +37,9 @@ def info(
         vertices_degree = [(node, val) for (node, val) in g.degree]
         for (node, val) in vertices_degree:
             print(f"d({node}) = {val}")
+
+    typer.echo()
+    draw(gstring)
 
 
 if __name__ == "__main__":

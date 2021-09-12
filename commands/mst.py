@@ -3,7 +3,7 @@ import typer
 app = typer.Typer(name="mst")
 
 
-@app.callback(invoke_without_command=True)
+@app.command()
 def mst(graph_edge_list: str):
     typer.echo(graph_edge_list)
 

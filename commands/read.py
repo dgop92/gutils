@@ -77,7 +77,7 @@ class NotePad(tk.Tk):
 app = typer.Typer(name="read")
 
 
-@app.callback(invoke_without_command=True)
+@app.command()
 @catch_exception(GUtilsException)
 def read(
     directed: bool = typer.Option(False, help="whether or not the graph is directed"),

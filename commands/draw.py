@@ -8,7 +8,7 @@ from gutils_exceptions import GUtilsException, catch_exception
 app = typer.Typer(name="draw")
 
 
-@app.callback(invoke_without_command=True)
+@app.command()
 @catch_exception(GUtilsException)
 def draw(
     gstring: str = typer.Argument(
