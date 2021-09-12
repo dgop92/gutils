@@ -2,7 +2,7 @@ import tkinter as tk
 
 import typer
 
-from gutils_exceptions import GUtilsException, catch_exception
+from core.gutils_core import GUtilsException, GUtilTyper
 
 
 class GraphParser:
@@ -74,11 +74,10 @@ class NotePad(tk.Tk):
         self.destroy()
 
 
-app = typer.Typer(name="read")
+app = GUtilTyper(name="read")
 
 
 @app.command()
-@catch_exception(GUtilsException)
 def read(
     directed: bool = typer.Option(False, help="whether or not the graph is directed"),
 ):

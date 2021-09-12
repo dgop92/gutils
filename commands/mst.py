@@ -1,6 +1,8 @@
 import typer
 
-app = typer.Typer(name="mst")
+from core.gutils_core import GUtilTyper
+
+app = GUtilTyper(name="mst")
 
 
 @app.command()

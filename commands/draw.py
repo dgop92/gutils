@@ -3,13 +3,12 @@ import pyclip
 import typer
 
 from commands.utils import parse_gstring
-from gutils_exceptions import GUtilsException, catch_exception
+from core.gutils_core import GUtilTyper
 
-app = typer.Typer(name="draw")
+app = GUtilTyper(name="draw")
 
 
 @app.command()
-@catch_exception(GUtilsException)
 def draw(
     gstring: str = typer.Argument(
         ..., help="gutils graph representation, use read for getting one"

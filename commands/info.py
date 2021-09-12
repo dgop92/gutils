@@ -2,13 +2,12 @@ import typer
 
 from commands.draw import draw
 from commands.utils import parse_gstring
-from gutils_exceptions import GUtilsException, catch_exception
+from core.gutils_core import GUtilTyper
 
-app = typer.Typer(name="info")
+app = GUtilTyper(name="info")
 
 
 @app.command()
-@catch_exception(GUtilsException)
 def info(
     gstring: str = typer.Argument(
         ..., help="gutils graph representation, use read for getting one"

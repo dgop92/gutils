@@ -1,6 +1,6 @@
 import networkx as nx
 
-from gutils_exceptions import GUtilsException
+from core.gutils_core import GUtilsException
 
 
 def contains_repeated_edges(edge_list):
