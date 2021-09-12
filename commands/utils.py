@@ -18,7 +18,6 @@ def contains_repeated_edges(edge_list):
 
 
 def get_graph_instance(edge_list, directed):
-    print("ad")
     repeated = contains_repeated_edges(edge_list)
     if repeated and directed:
         return nx.MultiDiGraph()
@@ -43,3 +42,7 @@ def parse_gstring(gstring):
         return g
     except Exception:
         raise GUtilsException("Invalid gstring representation")
+
+
+def get_dot_languague_of_graph(g):
+    pass
