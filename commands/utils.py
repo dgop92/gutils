@@ -65,5 +65,21 @@ def use_gstring(
     return wrapper
 
 
-def get_dot_languague_of_graph(g):
-    pass
+def use_two_gstring(
+    func: Callable,
+):
+    @merge_args(func)
+    def wrapper(
+        ctx: typer.Context,
+        gstring1: str = typer.Argument(..., help="first graph"),
+        gstring2: str = typer.Argument(..., help="second graph"),
+        info: bool = typer.Option(
+            False, "--info", "-i", help="whether or not display info about graphs"
+        ),
+        **kwargs,
+    ):
+        ctx.use_params = {"graph1": parse_gstring(gstring1)}
+        ctx.use_params["graph2"] = parse_gstring(gstring2)
+        return func(ctx=ctx, **kwargs)
+
+    return wrapper
