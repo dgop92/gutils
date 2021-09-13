@@ -1,16 +1,18 @@
 import tkinter as tk
 
+import pyclip
 import typer
 
 from core.gutils_core import GUtilsException, GUtilTyper
 
 
 class GraphParser:
-    def __init__(self, str_representation, directed=False):
+    def __init__(self, str_representation, directed=False, cast_int=False):
         self.str_representation = str_representation
         self.directed = directed
         self.str_edge_list = []
         self.isolated_vertices = []
+        self.cast_int = cast_int
 
     def parse(self):
 
@@ -37,12 +39,27 @@ class GraphParser:
                 except ValueError:
                     raise GUtilsException("Weight must be a number")
 
-                edge = (
-                    parent,
-                    vertice,
-                    weight,
-                )
-                self.str_edge_list.append(edge)
+                if self.cast_int:
+                    edge = (
+                        int(parent),
+                        int(vertice),
+                        weight,
+                    )
+                elif self.cast_int:
+                    edge = (
+                        parent,
+                        vertice,
+                        weight,
+                    )
+                # don't allow inverse edges, such as: a-b, b-a
+                append_edge = True
+                if not self.directed:
+                    for curr_edge in self.str_edge_list:
+                        if edge[0] == curr_edge[1] and edge[1] == curr_edge[0]:
+                            append_edge = False
+                            break
+                if append_edge:
+                    self.str_edge_list.append(edge)
 
     def get_gstring(self):
         g_string = f"{self.str_edge_list}-{self.isolated_vertices}-{self.directed}"
@@ -82,13 +99,15 @@ def read(
     directed: bool = typer.Option(
         False, "--directed", "-d", help="whether or not the graph is directed"
     ),
+    cast_int: bool = typer.Option(False, "--casint", "-c", help="cast edges to int"),
 ):
     notepad = NotePad()
     if len(notepad.text_written) == 0:
         raise GUtilsException("Adjacency representation is empty")
-    gparser = GraphParser(notepad.text_written, directed=directed)
+    gparser = GraphParser(notepad.text_written, directed=directed, cast_int=cast_int)
     gparser.parse()
     typer.echo(gparser.get_gstring())
+    pyclip.copy(gparser.get_gstring())
 
 
 if __name__ == "__main__":
