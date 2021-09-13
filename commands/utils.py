@@ -1,4 +1,8 @@
+from typing import Callable
+
 import networkx as nx
+import typer
+from merge_args import merge_args
 
 from core.gutils_core import GUtilsException
 
@@ -42,6 +46,23 @@ def parse_gstring(gstring):
         return g
     except Exception:
         raise GUtilsException("Invalid gstring representation")
+
+
+def use_gstring(
+    func: Callable,
+):
+    @merge_args(func)
+    def wrapper(
+        ctx: typer.Context,
+        gstring: str = typer.Argument(
+            ..., help="gutils graph representation, use read for getting one"
+        ),
+        **kwargs,
+    ):
+        ctx.use_params = {"graph": parse_gstring(gstring)}
+        return func(ctx=ctx, **kwargs)
+
+    return wrapper
 
 
 def get_dot_languague_of_graph(g):

@@ -1,19 +1,16 @@
 import typer
 
 from commands.draw import draw
-from commands.utils import parse_gstring
+from commands.utils import use_gstring
 from core.gutils_core import GUtilTyper
 
 app = GUtilTyper(name="info")
 
 
-@app.command()
-def info(
-    gstring: str = typer.Argument(
-        ..., help="gutils graph representation, use read for getting one"
-    )
-):
-    g = parse_gstring(gstring)
+@app.command(name="info")
+@use_gstring
+def info(ctx: typer.Context):
+    g = ctx.use_params["graph"]
     typer.echo(typer.style("General Data \n", fg=typer.colors.CYAN))
     typer.echo(f"n: {g.order()}")
     typer.echo(f"m: {g.size()}")
@@ -38,7 +35,7 @@ def info(
             print(f"d({node}) = {val}")
 
     typer.echo()
-    draw(gstring)
+    draw(ctx, ctx.params["gstring"])
 
 
 if __name__ == "__main__":
