@@ -79,7 +79,9 @@ app = GUtilTyper(name="read")
 
 @app.command()
 def read(
-    directed: bool = typer.Option(False, help="whether or not the graph is directed"),
+    directed: bool = typer.Option(
+        False, "--directed", "-d", help="whether or not the graph is directed"
+    ),
 ):
     notepad = NotePad()
     if len(notepad.text_written) == 0:
