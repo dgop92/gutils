@@ -45,7 +45,7 @@ class GraphParser:
                         int(vertice),
                         weight,
                     )
-                elif self.cast_int:
+                else:
                     edge = (
                         parent,
                         vertice,
