@@ -14,7 +14,6 @@ def mst(ctx: typer.Context):
     g = ctx.use_params["graph"]
     mst = nx.minimum_spanning_tree(g)
     gstring = get_gstring_for_graph(mst)
-    print(gstring)
     draw(ctx, gstring, weighted=True)
 
 

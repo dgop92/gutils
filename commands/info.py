@@ -22,7 +22,7 @@ def info(ctx: typer.Context):
 
     vertices_degree = [(node, val) for (node, val) in g.degree]
     for (node, val) in vertices_degree:
-        print(f"d({node}) = {val}")
+        typer.echo(f"d({node}) = {val}")
 
     if g.is_directed():
         typer.echo()
