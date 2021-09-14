@@ -1,13 +1,21 @@
+import networkx as nx
 import typer
 
+from commands.draw import draw
+from commands.utils import get_gstring_for_graph, use_gstring
 from core.gutils_core import GUtilTyper
 
 app = GUtilTyper(name="mst")
 
 
-@app.command()
-def mst(graph_edge_list: str):
-    typer.echo(graph_edge_list)
+@app.command(name="mst")
+@use_gstring
+def mst(ctx: typer.Context):
+    g = ctx.use_params["graph"]
+    mst = nx.minimum_spanning_tree(g)
+    gstring = get_gstring_for_graph(mst)
+    print(gstring)
+    draw(ctx, gstring, weighted=True)
 
 
 if __name__ == "__main__":

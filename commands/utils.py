@@ -83,3 +83,17 @@ def use_two_gstring(
         return func(ctx=ctx, **kwargs)
 
     return wrapper
+
+
+def get_gstring_for_graph(graph):
+
+    edge_list = list(graph.edges(data=True))
+    weighted_edge_list = []
+    for edge in edge_list:
+        weight = edge[2].get("weight", 1)
+        weighted_edge_list.append((edge[0], edge[1], weight))
+
+    isolated_nodes = list(nx.isolates(graph))
+    is_directed = graph.is_directed()
+
+    return f"{weighted_edge_list}-{isolated_nodes}-{is_directed}"
