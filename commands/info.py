@@ -10,6 +10,9 @@ app = GUtilTyper(name="info")
 @app.command(name="info")
 @use_gstring
 def info(ctx: typer.Context):
+    """
+    Outputs basic information about a graph
+    """
     g = ctx.use_params["graph"]
     typer.echo(typer.style("General Data \n", fg=typer.colors.CYAN))
     typer.echo(f"n: {g.order()}")

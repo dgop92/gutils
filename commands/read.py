@@ -101,6 +101,38 @@ def read(
     ),
     cast_int: bool = typer.Option(False, "--casint", "-c", help="cast edges to int"),
 ):
+    """
+    Open a Notepad for writing an adjacency representation of the graph
+    in the following format:
+
+    - Unweighted graph
+
+    a b c
+    b c
+
+    - Weighted graph
+
+    a b|5 c|6
+    b d|6 c|4
+
+    - Isolated nodes
+
+    a b
+    b c
+    d
+
+    - self reference node
+
+    a b
+    b b
+
+    As a result it outputs a 'gstring' that can be use in other commands
+    such as draw.
+
+    gutils draw "[('a', 'b', 1.0), ('a', 'c', 1.0), ('b', 'c', 1.0)]-[]-False
+
+    Note: it also copy the 'gstring' into your clipboard
+    """
     notepad = NotePad()
     if len(notepad.text_written) == 0:
         raise GUtilsException("Adjacency representation is empty")

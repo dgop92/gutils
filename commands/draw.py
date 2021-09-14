@@ -16,6 +16,10 @@ def draw(
         False, "--weighted", "-w", help="whether or not the graph is weighted"
     ),
 ):
+    """
+    Outputs a graph dot representation that can be used in the
+    following page to visualize: https://dgop92.github.io/gutils/
+    """
     g = ctx.use_params["graph"]
     typer.echo(typer.style("Dot representation \n", fg=typer.colors.CYAN))
 

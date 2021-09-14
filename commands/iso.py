@@ -13,6 +13,9 @@ app = GUtilTyper(name="iso")
 def iso(
     ctx: typer.Context,
 ):
+    """
+    Check if a graph is isomorphic to another graph
+    """
     g1 = ctx.use_params["graph1"]
     g2 = ctx.use_params["graph2"]
 

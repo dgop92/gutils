@@ -18,6 +18,9 @@ app = GUtilTyper(name="matrix")
 @app.command(name="matrix")
 @use_gstring
 def matrix(ctx: typer.Context, matrix_type: MatrixType):
+    """
+    Matrices representations of a graph
+    """
     g = ctx.use_params["graph"]
     typer.echo(typer.style("Node list", fg=typer.colors.BRIGHT_CYAN))
     typer.echo()
