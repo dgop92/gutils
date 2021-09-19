@@ -1,3 +1,4 @@
+from enum import Enum
 from heapq import heappop, heappush
 
 import networkx as nx
@@ -25,7 +26,29 @@ def get_neighbors_with_weight(g, parent_index):
     return map(lambda n: (n, g.get_edge_data(parent_index, n)["weight"]), neighbors)
 
 
-def dij_algo(g, start_index, mas=False):
+class MapperOption(str, Enum):
+    alphabetical = "alphabetical"
+    base0 = "base0"
+    base1 = "base1"
+
+
+FUNC_MAPPER_OPTIONS = {
+    MapperOption.alphabetical: {
+        "to_index0": to_index,
+        "original_form": to_char,
+    },
+    MapperOption.base0: {
+        "to_index0": lambda i: i,
+        "original_form": lambda i: i,
+    },
+    MapperOption.base1: {
+        "to_index0": lambda i: i - 1,
+        "original_form": lambda i: i + 1,
+    },
+}
+
+
+def dij_algo(g, start_index, func_mapper):
 
     # order is the number of vertices in a graph
     order = g.order()
@@ -46,10 +69,9 @@ def dij_algo(g, start_index, mas=False):
         step += 1
         typer.echo(typer.style(f"Step: {step}", fg=typer.colors.GREEN))
         typer.echo()
-        if mas:
-            typer.echo(f"-> Min pair ({minValue}, {to_char(parent_index)})")
-        else:
-            typer.echo(f"-> Min pair ({minValue}, {parent_index})")
+        typer.echo(
+            f"-> Min pair ({minValue}, {func_mapper['original_form'](parent_index)})"
+        )
 
         neighbors = get_neighbors_with_weight(g, parent_index)
 
@@ -72,28 +94,30 @@ def dij_algo(g, start_index, mas=False):
 def dij(
     ctx: typer.Context,
     start_index: int = typer.Option(0, "--start-index", "-s", help="start index"),
-    map_ascii: bool = typer.Option(
-        False, "--map-ascii", "-mas", help="map ascii for nodes. ej: a -> 0"
+    mapper_option: MapperOption = typer.Option(
+        MapperOption.alphabetical, "--mapper", "-m"
     ),
 ):
     """
     Dijkstra's algorithm
     """
     g: nx.Graph = ctx.use_params["graph"]
-    if map_ascii:
-        new_nodes = list(map(to_index, list(g.nodes)))
-        edges = g.edges(data=True)
-        new_edges = list(
-            map(lambda e: (to_index(e[0]), to_index(e[1]), e[2]["weight"]), edges)
-        )
 
-        g.clear()
-        g.add_nodes_from(new_nodes)
-        g.add_weighted_edges_from(new_edges)
+    new_nodes = list(map(to_index, list(g.nodes)))
+    edges = g.edges(data=True)
+    func_mapper = FUNC_MAPPER_OPTIONS[mapper_option.value]
+    to_index0 = func_mapper["to_index0"]
+    new_edges = list(
+        map(lambda e: (to_index0(e[0]), to_index0(e[1]), e[2]["weight"]), edges)
+    )
+
+    g.clear()
+    g.add_nodes_from(new_nodes)
+    g.add_weighted_edges_from(new_edges)
 
     # nodelist = sorted(g.nodes())
     typer.echo()
-    dij_algo(g, start_index, mas=map_ascii)
+    dij_algo(g, start_index, func_mapper=func_mapper)
 
 
 if __name__ == "__main__":
