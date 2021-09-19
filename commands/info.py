@@ -41,6 +41,15 @@ def info(ctx: typer.Context):
             typer.echo(f"d({node}) = {val}")
 
     typer.echo()
+
+    edge_list = list(g.edges)
+    wolfram_edges = map(lambda p: f"{p[0]}->{p[1]}", edge_list)
+    wf_representation = f"""Graph[{{{",".join(wolfram_edges)}}}]"""
+
+    typer.echo(typer.style("Wolfram representation \n", fg=typer.colors.CYAN))
+    typer.echo(wf_representation)
+    typer.echo()
+
     draw(ctx, ctx.params["gstring"])
 
 
