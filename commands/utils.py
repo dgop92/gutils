@@ -1,3 +1,4 @@
+import tkinter as tk
 from typing import Callable
 
 import networkx as nx
@@ -5,6 +6,31 @@ import typer
 from merge_args import merge_args
 
 from core.gutils_core import GUtilsException
+
+
+class NotePad(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+
+        self.text_written = ""
+        self.textbox = tk.Text(self, height=15, width=100)
+        self.textbox.pack()
+        self.submitbutton = tk.Button(self, text="OK", command=self.showinputtext)
+        self.submitbutton.pack()
+
+        windowWidth = self.winfo_reqwidth()
+        windowHeight = self.winfo_reqheight()
+
+        positionRight = int(self.textbox.winfo_screenwidth() / 2 - windowWidth / 2)
+        positionDown = int(self.textbox.winfo_screenheight() / 2 - windowHeight / 2)
+
+        # Positions the window in the center of the page.
+        self.geometry("+{}+{}".format(positionRight, positionDown))
+        self.mainloop()
+
+    def showinputtext(self):
+        self.text_written = self.textbox.get("1.0", "end-1c")
+        self.destroy()
 
 
 def contains_repeated_edges(edge_list):
