@@ -2,12 +2,10 @@ import networkx as nx
 import numpy as np
 import typer
 
-from commands.utils import use_gstring
+from commands.utils import MAX_VALUE, use_gstring
 from core.gutils_core import GUtilTyper
 
 app = GUtilTyper(name="dfs")
-
-MAX_VALUE = 100_000
 
 
 def get_neighbors(matrix, i):
@@ -20,14 +18,14 @@ def get_neighbors(matrix, i):
     return neighbors
 
 
-def dfs_algo(matrix, i):
+def dfs_algo(matrix, i, map_function):
     def dfs_recursive(i):
 
         if visited[i]:
             return
 
         visited[i] = 1
-        typer.echo(i)
+        typer.echo(map_function(i))
 
         neighbors = get_neighbors(matrix, i)
         for nei in neighbors:
@@ -44,6 +42,8 @@ def dfs(ctx: typer.Context):
     Matrices representations of a graph
     """
     g = ctx.use_params["graph"]
+    func_mapper = ctx.use_params["func_mapper"]
+    original_form = func_mapper["original_form"]
     typer.echo(typer.style("Node list", fg=typer.colors.BRIGHT_CYAN))
     typer.echo()
     nodelist = sorted(g.nodes())
@@ -58,7 +58,7 @@ def dfs(ctx: typer.Context):
     np_matrix = sparse_matrix.toarray()
     typer.echo(np_matrix)
     typer.echo()
-    dfs_algo(np_matrix, 0)
+    dfs_algo(np_matrix, 0, original_form)
 
 
 if __name__ == "__main__":

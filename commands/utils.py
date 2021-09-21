@@ -1,4 +1,5 @@
 import tkinter as tk
+from enum import Enum
 from typing import Callable
 
 import networkx as nx
@@ -6,6 +7,8 @@ import typer
 from merge_args import merge_args
 
 from core.gutils_core import GUtilsException
+
+MAX_VALUE = 100_000
 
 
 class NotePad(tk.Tk):
@@ -74,6 +77,36 @@ def parse_gstring(gstring):
         raise GUtilsException("Invalid gstring representation")
 
 
+def to_index(u):
+    return ord(u) - 97
+
+
+def to_char(i):
+    return chr(i + 97)
+
+
+class MapperOption(str, Enum):
+    alphabetical = "alphabetical"
+    base0 = "base0"
+    base1 = "base1"
+
+
+FUNC_MAPPER_OPTIONS = {
+    MapperOption.alphabetical: {
+        "to_index0": to_index,
+        "original_form": to_char,
+    },
+    MapperOption.base0: {
+        "to_index0": lambda i: i,
+        "original_form": lambda i: i,
+    },
+    MapperOption.base1: {
+        "to_index0": lambda i: i - 1,
+        "original_form": lambda i: i + 1,
+    },
+}
+
+
 def use_gstring(
     func: Callable,
 ):
@@ -83,9 +116,15 @@ def use_gstring(
         gstring: str = typer.Argument(
             ..., help="gutils graph representation, use read for getting one"
         ),
+        mapper_option: MapperOption = typer.Option(
+            MapperOption.alphabetical, "--mapper", "-m"
+        ),
         **kwargs,
     ):
-        ctx.use_params = {"graph": parse_gstring(gstring)}
+        use_params = getattr(ctx, "use_params", {})
+        use_params["graph"] = parse_gstring(gstring)
+        use_params["func_mapper"] = FUNC_MAPPER_OPTIONS[mapper_option.value]
+        ctx.use_params = use_params
         return func(ctx=ctx, **kwargs)
 
     return wrapper
@@ -104,8 +143,10 @@ def use_two_gstring(
         ),
         **kwargs,
     ):
-        ctx.use_params = {"graph1": parse_gstring(gstring1)}
-        ctx.use_params["graph2"] = parse_gstring(gstring2)
+        use_params = getattr(ctx, "use_params", {})
+        use_params["graph1"] = parse_gstring(gstring1)
+        use_params["graph2"] = parse_gstring(gstring2)
+        ctx.use_params = use_params
         return func(ctx=ctx, **kwargs)
 
     return wrapper
