@@ -5,7 +5,7 @@ import numpy as np
 import typer
 
 from commands.draw import draw
-from commands.utils import NotePad, get_gstring_for_graph
+from commands.utils import MapperOption, NotePad, get_gstring_for_graph
 from core.gutils_core import GUtilsException, GUtilTyper
 
 app = GUtilTyper(name="adj")
@@ -92,7 +92,7 @@ def adj(
         )
     )
     typer.echo()
-    draw(ctx, get_gstring_for_graph(graph), mapper_option=ctx.use_params["mapper_type"])
+    draw(ctx, get_gstring_for_graph(graph), mapper_option=MapperOption.alphabetical)
 
 
 if __name__ == "__main__":

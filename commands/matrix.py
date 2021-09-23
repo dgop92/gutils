@@ -31,9 +31,7 @@ def matrix(ctx: typer.Context, matrix_type: MatrixType):
     if matrix_type.value == matrix_type.adj:
         typer.echo(typer.style("Adjacency matrix", fg=typer.colors.BRIGHT_CYAN))
         typer.echo()
-        sparse_matrix = nx.adjacency_matrix(
-            g,
-        )
+        sparse_matrix = nx.adjacency_matrix(g, nodelist=nodelist)
         np_matrix = sparse_matrix.toarray()
         typer.echo(sparse_matrix)
         typer.echo()
