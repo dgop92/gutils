@@ -8,6 +8,7 @@ from commands.info import app as info
 from commands.iso import app as iso
 from commands.matrix import app as matrix
 from commands.mst import app as mst
+from commands.plane import app as plane
 from commands.read import app as read
 
-all_commands = [read, mst, draw, info, iso, matrix, floyd, dij, adj, dfs, bfs]
+all_commands = [read, mst, draw, info, iso, matrix, floyd, dij, adj, dfs, bfs, plane]
