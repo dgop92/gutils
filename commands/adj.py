@@ -92,7 +92,7 @@ def adj(
         )
     )
     typer.echo()
-    draw(ctx, get_gstring_for_graph(graph))
+    draw(ctx, get_gstring_for_graph(graph), mapper_option=ctx.use_params["mapper_type"])
 
 
 if __name__ == "__main__":

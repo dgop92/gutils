@@ -125,6 +125,7 @@ def use_gstring(
         use_params["graph"] = parse_gstring(gstring)
         use_params["func_mapper"] = FUNC_MAPPER_OPTIONS[mapper_option.value]
         ctx.use_params = use_params
+        ctx.use_params["mapper_type"] = mapper_option
         return func(ctx=ctx, **kwargs)
 
     return wrapper

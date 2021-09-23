@@ -50,7 +50,7 @@ def info(ctx: typer.Context):
     typer.echo(wf_representation)
     typer.echo()
 
-    draw(ctx, ctx.params["gstring"])
+    draw(ctx, ctx.params["gstring"], mapper_option=ctx.use_params["mapper_type"])
 
 
 if __name__ == "__main__":
