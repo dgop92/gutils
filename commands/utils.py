@@ -117,7 +117,10 @@ def use_gstring(
             ..., help="gutils graph representation, use read for getting one"
         ),
         mapper_option: MapperOption = typer.Option(
-            MapperOption.alphabetical, "--mapper", "-m"
+            MapperOption.alphabetical,
+            "--mapper",
+            "-m",
+            help="A map function to map indexes with something else. ex: alphabetical maps 0 -> a",
         ),
         **kwargs,
     ):

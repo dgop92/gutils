@@ -43,7 +43,7 @@ def bfs_algo(matrix, i, map_function):
 @use_gstring
 def dfs(ctx: typer.Context):
     """
-    Matrices representations of a graph
+    Breath first search algorithm
     """
     g = ctx.use_params["graph"]
     func_mapper = ctx.use_params["func_mapper"]

@@ -134,7 +134,7 @@ class AlgoType(str, Enum):
 @use_gstring
 def mst(
     ctx: typer.Context,
-    algo: AlgoType = typer.Option(AlgoType.network),
+    algo: AlgoType = typer.Option(AlgoType.network, help="The algorithm to solve mst"),
     start_index: int = typer.Option(0, "--start-index", "-s", help="start index"),
 ):
     """

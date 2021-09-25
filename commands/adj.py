@@ -43,9 +43,22 @@ def adj(
     directed: bool = typer.Option(
         False, "--directed", "-d", help="whether or not the graph is directed"
     ),
-    edge_type: EdgeType = typer.Option(EdgeType.alphabetical),
+    edge_type: EdgeType = typer.Option(
+        EdgeType.alphabetical, help="The representation of the nodes in the graph"
+    ),
 ):
+    """
+    Given an adjancency matrix, draw the respective graph
 
+    Input example:
+
+    1 0 0 0 1 0
+    1 1 0 0 0 1
+    0 0 0 0 1 1
+    0 1 1 0 0 0
+    0 0 1 2 0 0
+
+    """
     notepad = NotePad()
     if len(notepad.text_written) == 0:
         raise GUtilsException("Adjacency representation is empty")

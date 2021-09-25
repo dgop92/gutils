@@ -27,7 +27,7 @@ def draw_plane(vertices_points, edges):
 @use_gstring
 def plane(ctx: typer.Context):
     """
-    Check if graph is planar
+    Check if graph is planar, and if it is planner, draw a plane representation
     """
     g = ctx.use_params["graph"]
     is_planar, emmbeding = nx.check_planarity(g)

@@ -17,7 +17,12 @@ app = GUtilTyper(name="matrix")
 
 @app.command(name="matrix")
 @use_gstring
-def matrix(ctx: typer.Context, matrix_type: MatrixType):
+def matrix(
+    ctx: typer.Context,
+    matrix_type: MatrixType = typer.Option(
+        MatrixType.adj, help="adjacency or laplacian matrix"
+    ),
+):
     """
     Matrices representations of a graph
     """
