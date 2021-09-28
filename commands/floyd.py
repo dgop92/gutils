@@ -1,6 +1,9 @@
+import re
+
 import networkx as nx
 import numpy as np
 import typer
+import xlwt
 
 from commands.utils import MAX_VALUE, use_gstring
 from core.gutils_core import GUtilTyper
@@ -75,6 +78,43 @@ def floyd(ctx: typer.Context):
                 matrix[i][j] = MAX_VALUE
 
     floyd_warshall(matrix, original_form)
+
+
+@app.command(name="floyd_excel")
+def floyd_excel(
+    floyd_output: typer.FileText = typer.Option(
+        ..., "--floyd-output", "-fo", help="The floyd output to create a excel file"
+    ),
+    cast_int: bool = typer.Option(True, "--casint", "-c", help="cast vertices to int"),
+):
+    """
+    floyd-warshall output to excel
+    """
+    workbook = xlwt.Workbook()
+    work_sheet = workbook.add_sheet("Floyd")
+
+    i = 0
+    BASE_COLUMN = 0
+
+    element_pattern = r"\w+"
+
+    lines = floyd_output.readlines()
+    for line in lines:
+
+        if line.find("[") != -1:
+            elements = re.findall(element_pattern, line)
+            n = len(elements)
+            for j in range(n):
+                element = elements[j]
+                if cast_int:
+                    element = int(element)
+                work_sheet.write(i, BASE_COLUMN + j + 1, element)
+        else:
+            work_sheet.write(i, BASE_COLUMN, line)
+
+        i += 1
+
+    workbook.save("excel_files/floyd.xls")
 
 
 if __name__ == "__main__":
