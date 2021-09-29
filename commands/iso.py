@@ -2,7 +2,7 @@ import networkx as nx
 import typer
 
 from commands.info import info
-from commands.utils import use_two_gstring
+from commands.utils import MapperOption, use_two_gstring
 from core.gutils_core import GUtilTyper
 
 app = GUtilTyper(name="iso")
@@ -28,10 +28,10 @@ def iso(
     if ctx.params["info"]:
         typer.echo(typer.style("G1 info \n", fg=typer.colors.CYAN))
         ctx.params["gstring"] = ctx.params["gstring1"]
-        info(ctx, ctx.params["gstring1"])
+        info(ctx, ctx.params["gstring1"], mapper_option=MapperOption.alphabetical)
         typer.echo(typer.style("G2 info \n", fg=typer.colors.CYAN))
         ctx.params["gstring"] = ctx.params["gstring2"]
-        info(ctx, ctx.params["gstring2"])
+        info(ctx, ctx.params["gstring2"], mapper_option=MapperOption.alphabetical)
 
 
 if __name__ == "__main__":
