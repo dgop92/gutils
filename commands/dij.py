@@ -1,10 +1,12 @@
+import re
 from heapq import heappop, heappush
 
 import networkx as nx
 import numpy as np
 import typer
+import xlwt
 
-from commands.utils import MAX_VALUE, use_gstring
+from commands.utils import FUNC_MAPPER_OPTIONS, MAX_VALUE, MapperOption, use_gstring
 from core.gutils_core import GUtilTyper
 
 app = GUtilTyper(name="dij")
@@ -52,6 +54,7 @@ def dij_algo(g, start_index, func_mapper):
                 distance[neighbor_index] = new_dist
                 prev[neighbor_index] = parent_index
                 heappush(priority_queue, (new_dist, neighbor_index))
+        typer.echo(prev)
         typer.echo(distance)
         typer.echo()
 
@@ -82,6 +85,89 @@ def dij(
     # nodelist = sorted(g.nodes())
     typer.echo()
     dij_algo(g, start_index, func_mapper=func_mapper)
+
+
+@app.command(name="dij_excel")
+def dij_excel(
+    dij_output: typer.FileText = typer.Option(
+        ..., "--dij-output", "-do", help="The dij output to create a excel file"
+    ),
+    mapper_option: MapperOption = typer.Option(
+        MapperOption.alphabetical,
+        "--mapper",
+        "-m",
+        help="A map function to map indexes with something else. ex: alphabetical maps 0 -> a",
+    ),
+):
+    """
+    Dijkstra's output to excel
+    """
+    workbook = xlwt.Workbook()
+    work_sheet = workbook.add_sheet("Dij")
+    font = xlwt.Font()
+    font.bold = True
+    selected_style = xlwt.XFStyle()
+    selected_style.font = font
+
+    func_mapper = FUNC_MAPPER_OPTIONS[mapper_option.value]
+    to_index0 = func_mapper["to_index0"]
+    to_original_form = func_mapper["original_form"]
+
+    step_pattern = r"Step: \d+"
+    element_pattern = r"\w+"
+    prev_pattern = r"[\w-]+"
+    minpair_pattern = r"\(([\w.]+), ([\w]+)\)"
+
+    lines = dij_output.readlines()
+    n = len(lines)
+    step_lines_indexes = []
+    for i in range(n):
+        if re.match(step_pattern, lines[i]):
+            step_lines_indexes.append(i)
+
+    # create header
+
+    work_sheet.write(0, 0, "V")
+    for j, step_index in enumerate(step_lines_indexes, start=1):
+        work_sheet.write(0, j, lines[step_index])
+
+    # fill table
+    for j, step_index in enumerate(step_lines_indexes, start=1):
+        min_pair_index = step_index + 2
+        prev_index = step_index + 3
+        element_index = step_index + 4
+
+        match = re.search(minpair_pattern, lines[min_pair_index])
+        min_node = match.group(2)
+        current_node_idx = to_index0(min_node)
+
+        elements = re.findall(element_pattern, lines[element_index])
+        prev_elements = re.findall(prev_pattern, lines[prev_index])
+        n = len(elements)
+        for i in range(n):
+            distance = int(elements[i])
+            if distance == MAX_VALUE:
+                distance = "infinity"
+                work_sheet.write(i + 1, j, distance)
+                continue
+
+            if prev_elements[i] == "-1":
+                tuple_node = min_node
+            else:
+                tuple_node = to_original_form(int(prev_elements[i]))
+
+            if current_node_idx == i:
+                work_sheet.write(
+                    i + 1, j, f"({distance}, {tuple_node})", style=selected_style
+                )
+            else:
+                work_sheet.write(
+                    i + 1,
+                    j,
+                    f"({distance}, {tuple_node})",
+                )
+
+    workbook.save("excel_files/dij.xls")
 
 
 if __name__ == "__main__":
