@@ -53,7 +53,7 @@ def floyd_warshall(g, original_form=None):
                 new_dist = distance_matrix[i][k] + distance_matrix[k][j]
                 if new_dist < distance_matrix[i][j]:
                     distance_matrix[i][j] = new_dist
-                    path_matrix[i][j] = k
+                    path_matrix[i][j] = path_matrix[i][k]
 
         typer.echo(typer.style(f"Iteration K = {k}\n", fg=typer.colors.GREEN))
         show_matrices(distance_matrix, path_matrix, original_form)
@@ -85,7 +85,7 @@ def floyd_excel(
     floyd_output: typer.FileText = typer.Option(
         ..., "--floyd-output", "-fo", help="The floyd output to create a excel file"
     ),
-    cast_int: bool = typer.Option(True, "--casint", "-c", help="cast vertices to int"),
+    cast_int: bool = typer.Option(False, "--casint", "-c", help="cast vertices to int"),
 ):
     """
     floyd-warshall output to excel
