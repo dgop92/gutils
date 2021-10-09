@@ -39,8 +39,14 @@ def distinfo(
                 cost += g.get_edge_data(min_path[i], min_path[i + 1])["weight"]
             typer.echo(f"Cost: {cost}")
     else:
+
+        if weighted:
+            spath = dict(nx.shortest_path_length(g, weight="weight"))
+        else:
+            spath = None
+
         typer.echo(typer.style("Eccentricities \n", fg=typer.colors.CYAN))
-        eccentricities = nx.eccentricity(g)
+        eccentricities = nx.eccentricity(g, sp=spath)
 
         for (node, ecce) in eccentricities.items():
             typer.echo(f"e({node}) = {ecce}")
@@ -48,13 +54,13 @@ def distinfo(
         typer.echo()
 
         typer.echo(typer.style("Diameter \n", fg=typer.colors.CYAN))
-        diameter = nx.diameter(g)
+        diameter = nx.diameter(g, e=eccentricities)
         typer.echo(f"Diam(G) = {diameter}")
 
         typer.echo()
 
         typer.echo(typer.style("Radius \n", fg=typer.colors.CYAN))
-        radius = nx.radius(g)
+        radius = nx.radius(g, e=eccentricities)
         typer.echo(f"r(G) = {radius}")
 
 
