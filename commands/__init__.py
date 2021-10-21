@@ -8,6 +8,7 @@ from commands.floyd import app as floyd
 from commands.info import app as info
 from commands.iso import app as iso
 from commands.matrix import app as matrix
+from commands.minsetv import app as minsetv
 from commands.mst import app as mst
 from commands.plane import app as plane
 from commands.read import app as read
@@ -26,4 +27,5 @@ all_commands = [
     bfs,
     plane,
     distinfo,
+    minsetv,
 ]
