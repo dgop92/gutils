@@ -5,6 +5,7 @@ from commands.dij import app as dij
 from commands.distinfo import app as distinfo
 from commands.draw import app as draw
 from commands.floyd import app as floyd
+from commands.idepe import app as idepe
 from commands.info import app as info
 from commands.iso import app as iso
 from commands.matrix import app as matrix
@@ -28,4 +29,5 @@ all_commands = [
     plane,
     distinfo,
     minsetv,
+    idepe,
 ]
